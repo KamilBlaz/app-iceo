@@ -1,0 +1,52 @@
+
+ingress:
+  host: "hello.iceo.co"
+  ingressClassName: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, PUT, POST, DELETE, OPTIONS"
+
+nodeSelector: {}
+
+whitelist:
+  cidr: 1.1.1.1
+
+image:
+  name: ""
+  tag: ""
+  pullPolicy: IfNotPresent
+
+replicaCount: 3
+
+readinessProbe:
+    httpGet:
+      port: 8080
+      path: "/health"
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 30
+    failureThreshold: 3
+
+livenessProbe:
+    httpGet:
+      port: 8080
+      path: "/health"
+    initialDelaySeconds: 30
+    periodSeconds: 30
+    timeoutSeconds: 60
+    failureThreshold: 3
+
+envs:
+  HTTP_PROXY: ""
+  JSON_LOGS: ""
+  ENV: ""
+  APP_HOST: ""
+  APP_PORT: ""
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 101
+  fsGroup: 101
+
+cloudflare_token: ""
+cloudflare_email: ""

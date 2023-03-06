@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ include "service.name" . }}
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "commonLabels" . | indent 6 }}
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080

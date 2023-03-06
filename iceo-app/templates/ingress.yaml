@@ -1,0 +1,26 @@
+{{- if .Values.ingress.host }}
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ include "ingress.name" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  annotations: {{ toYaml .Values.ingress.annotations | nindent 4 }}
+spec:
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host }}
+      secretName: wildcard-prod-tls
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - backend:
+              service:
+                name: {{ include "service.name" . }}
+                port:
+                  number: 8080
+            pathType: Prefix
+            path: /
+
+{{- end }}
